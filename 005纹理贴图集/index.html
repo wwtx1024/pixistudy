@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script>
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        TextureCache = PIXI.TextureCache,
+        Rectangle = PIXI.Rectangle;
+    let app = new Application({
+        width: 400,
+        height: 600,
+    });
+    console.log(app.view.width)
+    document.body.appendChild(app.view);
+
+    loader.add("/img/treasureHunter.json").load(setup);
+    let dungeon, explorer, treasure, id, door;
+    function setup() {
+
+        //   背景
+        for (let i = 0; i <= app.view.width - 20; i = i + 20) {
+            for (let j = 0; j <= app.view.height - 20; j = j + 20) {
+                let bgTexture = TextureCache["bg.png"];
+                bg = new Sprite(bgTexture);
+                bg.position.set(i, j)
+                app.stage.addChild(bg);
+            }
+        }
+        // 人
+        explorer = new Sprite(resources["/img/treasureHunter.json"].textures["explorer.png"])
+        explorer.x = 68;
+        explorer.y = app.stage.height / 2 - explorer.height / 2;
+        app.stage.addChild(explorer);
+        let x=1;y=1;
+        app.ticker.add(delta => {
+            console.log(x,y)
+            explorer.x=explorer.x+1*x; 
+            explorer.y= explorer.y+1*y; 
+            if(explorer.x<=0){
+                x=1
+            }
+            if(explorer.x>=(app.view.width-explorer.width)){
+                x=-1
+            }
+            if(explorer.y<=0){
+                y=1
+            }
+            if(explorer.y>=(app.view.height-explorer.height)){
+                y=-1
+            }
+        });
+        // 宝箱
+        id = PIXI.loader.resources["/img/treasureHunter.json"].textures;
+        treasure = new Sprite(id["treasure.png"]);
+        // app.stage.addChild(treasure);
+        treasure.x = app.stage.width - treasure.width - 48;
+        treasure.y = app.stage.height / 2 - treasure.height / 2;
+        app.stage.addChild(treasure)
+        // 门
+        door = new Sprite(resources["/img/treasureHunter.json"].textures["door.png"]);
+        door.x = 68;
+        door.y = 0;
+        app.stage.addChild(door);
+        //怪物
+        for(let x=0;x<6;x++){
+            let blob=new Sprite(resources["/img/treasureHunter.json"].textures["blob.png"]);
+            blob.x=100+x*30
+            blob.y=randomInt(60,500);
+            app.stage.addChild(blob);
+          
+        }
+    }
+  
+
+</script>
+
+</html>

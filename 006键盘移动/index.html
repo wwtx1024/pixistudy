@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script src="./key.js"></script>
+<script>
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        TextureCache = PIXI.TextureCache,
+        Rectangle = PIXI.Rectangle;
+    let app = new Application({
+        width: 600,
+        height: 600,
+    })
+    document.body.appendChild(app.view)
+    loader.add("/img/09.png").load(setup);
+    let cat = null;
+    function setup() {
+        let texture = TextureCache["/img/09.png"];
+        let rectangle = new Rectangle(0, 0, 32, 32);
+        texture.frame = rectangle;
+        cat = new Sprite(texture);
+        cat.position.set(20, 20);
+        app.stage.addChild(cat)
+    }
+
+    let catRight = keyboard("ArrowRight"),
+        catLeft = keyboard("ArrowLeft"),
+        catUp = keyboard("ArrowUp"),
+        catDown = keyboard("ArrowDown");
+    let rightTimer=null
+    catRight.press = () => {
+        rightTimer=setInterval(()=>{
+            cat.x += 5
+        },100)
+       
+    }
+    catRight.release=()=>{
+        clearInterval(rightTimer);
+        rightTimer=null;
+    }
+    catLeft.press = () => {
+        
+        cat.x -= 5
+    }
+    catUp.press = () => {
+        
+        cat.y -= 5
+    }
+    catDown.press = () => {
+        
+        cat.y += 5
+    }
+</script>
+
+</html>

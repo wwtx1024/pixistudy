@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script>
+    // 定义别名
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite;
+    let app = new Application({
+        width: 500,
+        height: 500,
+        antialias: true,    // default: false 反锯齿
+        transparent: false, // default: false 透明度
+        resolution: 1,
+    })
+    document.body.appendChild(app.view)
+    loader
+        .add("../img/lang.webp")
+        .add("../img/shizi.webp")
+        .load(setup)
+    function setup() {
+        let lang = new Sprite(resources["../img/lang.webp"].texture);
+        //定位***********************
+        // lang.x=100;
+        // lang.y=50;
+        lang.position.set(200, 200)
+        // 大小*********************
+        // lang.width=100;
+        // lang.height=100;
+        //缩放*********************基于原图大小进行缩放不是基于设置的大小进行缩放
+        // lang.scale.x=1;
+        // lang.scale.y=1;
+        // lang.scale.set(2,2);
+        // 旋转*********************
+        // lang.rotation = Math.PI / 4;
+        // 设置中心点，设置后旋转缩放位移以中心点为准
+        // lang.anchor.x = 0.5;
+        // lang.anchor.y = 0.5;
+        // lang.anchor.set(1,1);
+        // 设置纹理某个坐标点是中心点
+        lang.pivot.set(100, 100)
+        app.stage.addChild(lang);
+        // let shizi = new Sprite(resources["../img/shizi.webp"].texture);
+        // //定位***********************
+        // // shizi.x=400;
+        // // shizi.y=400;
+        // shizi.position.set(200, 200);
+        // // 大小*************************
+        // shizi.width = 300;
+        // shizi.height = 300;
+        // //缩放*********************基于原图大小进行缩放不是基于设置的大小进行缩放
+        // // shizi.scale.x=1;
+        // // shizi.scale.y=1;
+        // shizi.scale.set(1, 1)
+        // // app.stage.addChild(shizi)
+    }
+</script>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script>
+    // 定义别名
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite;
+    let app = new Application(
+        {
+            width: 800,         // default: 800 宽度
+            height: 800,        // default: 600 高度
+            antialias: true,    // default: false 反锯齿
+            transparent: false, // default: false 透明度
+            resolution: 1,       // default: 1 分辨率
+          
+        }
+
+    );
+    document.body.appendChild(app.view);
+    // 绘制图片纹理
+    loader
+        .add(["../img/laohu.webp", "../img/lang.webp", "../img/shizi.webp"])
+        .on("progress", loadProgess)
+        .load(setup);
+    function loadProgess(loader, resource) {
+        console.log("loading",loader, resource)
+    }
+    function setup() {
+        let laohu = new Sprite(resources["../img/laohu.webp"].texture)
+        app.stage.addChild(laohu);
+        console.log("draw")
+
+    }
+
+</script>
+
+</html>

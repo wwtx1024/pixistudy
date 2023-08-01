@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script src="../key.js"></script>
+<script>
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        TextureCache = PIXI.TextureCache,
+        Rectangle = PIXI.Rectangle;
+    Container = PIXI.Container;
+    let Graphics = PIXI.Graphics;
+    let Text = PIXI.Text;
+    let TextStyle = PIXI.TextStyle;
+    let app = new Application({
+        width: 800,
+        height: 800,
+        antialias: true,
+        backgroundColor: 0x999999
+    })
+    document.body.appendChild(app.view);
+    loader.add("/img/treasureHunter.json").add("/img/monster.png").load(setup);
+    let monsters = [];
+    let explorer = null;
+    let blackRoundRect = null;
+    let redRoundRect = null;
+    let healthBar = null;
+    function setup() {
+        // 绘制背景；
+        for (let i = 0; i <= app.view.width - 20; i = i + 20) {
+            for (let j = 0; j <= app.view.height - 20; j = j + 20) {
+
+                let bg03 = new Sprite(resources["/img/treasureHunter.json"].textures["bg03.png"]);
+                bg03.position.set(i, j)
+                app.stage.addChild(bg03);
+            }
+        }
+        //边框
+        for (let i = 0; i <= app.view.width - 20; i = i + 20) {
+            for (let j = 0; j <= app.view.height - 20; j = j + 20) {
+                if (j <= 20 || j >= app.view.height - 2 * 20) {
+                    let bg02 = new Sprite(resources["/img/treasureHunter.json"].textures["bg02.png"]);
+                    bg02.position.set(i, j)
+                    app.stage.addChild(bg02);
+                }
+                if (i <= 20 || i >= app.view.height - 2 * 20) {
+                    let bg02 = new Sprite(resources["/img/treasureHunter.json"].textures["bg02.png"]);
+                    bg02.position.set(i, j)
+                    app.stage.addChild(bg02);
+                }
+
+            }
+
+        }
+        // 门
+        let door = new Sprite(resources["/img/treasureHunter.json"].textures["door.png"]);
+        door.position.set(80, 6);
+        door.width = 28;
+        door.height = 32
+        app.stage.addChild(door);
+
+        //人
+        explorer = new Sprite(resources["/img/treasureHunter.json"].textures["explorer.png"]);
+        explorer.position.set(80, app.view.height / 2);
+        explorer.vx = 0;
+        explorer.vy = 0
+        app.stage.addChild(explorer);
+        regKey()
+        //宝箱
+        let treasure = new Sprite(resources["/img/treasureHunter.json"].textures["treasure.png"]);
+        treasure.position.set(app.view.width - 80, app.view.height / 2);
+        treasure.height = 32
+        app.stage.addChild(treasure);
+        // 怪物
+        let texture = TextureCache["/img/monster.png"];
+        let rectangle = new Rectangle(0, 0, 32, 32);
+        texture.frame = rectangle
+        for (let i = 150; i < 650; i = i + 80) {
+            let monster = new Sprite(texture);
+            monster.x = i;
+            monster.y = randomInt(80, 700)
+            monster.width = 60;
+            monster.height = 60;
+            monster.vy = randomInt(-3, 3);
+            if (monster.vy == 0) {
+                monster.vy = 2
+            }
+            monsters.push(monster)
+            app.stage.addChild(monster)
+        }
+        // 血条
+        healthBar = new Container();
+        healthBar.position.set(600, 15);
+        app.stage.addChild(healthBar)
+        blackRoundRect = new Graphics();
+        blackRoundRect.beginFill(0x000000);
+        blackRoundRect.drawRoundedRect(0, 0, 150, 10, 5);
+        blackRoundRect.endFill();
+        healthBar.addChild(blackRoundRect);
+        redRoundRect = new Graphics();
+        redRoundRect.beginFill(0xcc3333);
+        redRoundRect.drawRoundedRect(0, 0, 150, 10, 5);
+        redRoundRect.endFill();
+
+        healthBar.addChild(redRoundRect)
+        app.ticker.add(delta => gameLoop(delta));
+
+    }
+    function gameLoop() {
+        // 怪物移动
+        monsters.forEach(monster => {
+            monster.y += monster.vy;
+            if (monster.y >= 700 || monster.y <= 40) {
+                monster.vy *= -1
+            }
+
+          
+            if (hitTestRectangle(explorer, monster)) {
+                redRoundRect.width -= 0.75;
+                explorer.alpha -= 0.005;
+            } else {
+
+            }
+
+        });
+        play()
+    }
+    function play() {
+       
+            // explorer.x += explorer.vx;
+            // explorer.y += explorer.vy;
+        if(explorer.x<=40){
+            explorer.x=40
+        }else{
+            explorer.x += explorer.vx; 
+        }
+        if(explorer.x >=740){
+            explorer.x=740
+        }else{
+            explorer.x += explorer.vx;  
+        }
+        if(explorer.y<=40){
+            explorer.y=40
+        }else{
+            explorer.y += explorer.vy; 
+        }
+        if(explorer.y >=740){
+            explorer.y=740
+        }else{
+            explorer.y += explorer.vy;  
+        }
+
+    }
+    function regKey() {
+        // 人键盘事件
+        let explorerRight = keyboard("ArrowRight");
+            explorerLeft = keyboard("ArrowLeft"),
+            explorerUp = keyboard("ArrowUp"),
+            explorerDown = keyboard("ArrowDown");
+        explorer.vy = 0;
+        explorer.vy = 0
+
+        explorerRight.press = () => {
+            explorer.vx = 5;
+
+
+        }
+        explorerRight.release = () => {
+            explorer.vx = 0;
+
+        }
+        explorerLeft.press = () => {
+            explorer.vx = -5;
+
+        }
+        explorerLeft.release = () => {
+            explorer.vx = 0;
+
+        }
+        explorerUp.press = () => {
+            explorer.vy = -5;
+
+        }
+        explorerUp.release = () => {
+            explorer.vy = 0;
+
+        }
+        explorerDown.press = () => {
+            explorer.vy = 5;
+
+        }
+        explorerDown.release = () => {
+            explorer.vy = 0;
+
+        }
+    }
+    function randomInt(min, max) {
+
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+
+
+    }
+    function hitTestRectangle(r1, r2) {
+
+        //Define the variables we'll need to calculate
+        let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+
+        //hit will determine whether there's a collision
+        hit = false;
+
+        //Find the center points of each sprite
+        r1.centerX = r1.x + r1.width / 2;
+        r1.centerY = r1.y + r1.height / 2;
+        r2.centerX = r2.x + r2.width / 2;
+        r2.centerY = r2.y + r2.height / 2;
+
+        //Find the half-widths and half-heights of each sprite
+        r1.halfWidth = r1.width / 2;
+        r1.halfHeight = r1.height / 2;
+        r2.halfWidth = r2.width / 2;
+        r2.halfHeight = r2.height / 2;
+
+        //Calculate the distance vector between the sprites
+        vx = r1.centerX - r2.centerX;
+        vy = r1.centerY - r2.centerY;
+
+        //Figure out the combined half-widths and half-heights
+        combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+        combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+        //Check for a collision on the x axis
+        if (Math.abs(vx) < combinedHalfWidths) {
+
+            //A collision might be occurring. Check for a collision on the y axis
+            if (Math.abs(vy) < combinedHalfHeights) {
+
+                //There's definitely a collision happening
+                hit = true;
+            } else {
+
+                //There's no collision on the y axis
+                hit = false;
+            }
+        } else {
+
+            //There's no collision on the x axis
+            hit = false;
+        }
+
+        //`hit` will be either `true` or `false`
+        return hit;
+    };
+</script>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script src="./key.js"></script>
+<script>
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        TextureCache = PIXI.TextureCache,
+        Rectangle = PIXI.Rectangle;
+    let app = new Application({
+        width: 600,
+        height: 600,
+        antialias: true,
+        backgroundColor: 0x999999
+    })
+    document.body.appendChild(app.view);
+    // 绘制矩形********************************
+    let Graphics = PIXI.Graphics;
+    let rectangle = new Graphics();
+    rectangle.beginFill(0x33CC33);
+    rectangle.lineStyle(25, 0xCC3333, 0.5);
+    rectangle.drawRect(0, 0, 50, 50);
+    rectangle.endFill();
+    rectangle.position.set(50, 20)
+    app.stage.addChild(rectangle);
+    let rectangle2 = new Graphics();
+    rectangle2.beginFill(0x33CC33);
+    rectangle2.drawRect(0, 0, 50, 50);
+    rectangle2.endFill();
+    rectangle2.position.set(100, 20)
+    app.stage.addChild(rectangle2)
+    //绘制圆形*********************************
+    let circle = new Graphics();
+    circle.beginFill(0x3333CC);
+    circle.lineStyle(10, 0xC3C3C3, 0.5)
+    circle.drawCircle(0, 0, 50);
+    circle.endFill();
+    circle.position.set(50, 150)
+    app.stage.addChild(circle);
+    let circle2 = new Graphics();
+    circle2.beginFill(0x3333CC);
+
+    circle2.drawCircle(0, 0, 50);
+    circle2.endFill();
+    circle2.position.set(150, 150)
+    app.stage.addChild(circle2)
+    // 绘制椭圆
+    let ellipse = new Graphics();
+    ellipse.beginFill(0x33CCCC);
+    ellipse.drawEllipse(50, 270, 40, 50);
+    ellipse.endFill();
+    app.stage.addChild(ellipse);
+    //绘制圆角矩形
+    let roundRect = new Graphics();
+    roundRect.beginFill(0xCCCC33);
+    roundRect.drawRoundedRect(100, 250, 200, 100, 10);
+    roundRect.endFill();
+    app.stage.addChild(roundRect);
+    // 绘制线条
+    let line = new Graphics();
+    line.lineStyle(10, 0xCC33CC);
+    line.moveTo(500, 200);
+    line.lineTo(400, 500);
+    line.lineTo(500, 600);
+    app.stage.addChild(line);
+    //绘制多边形
+    let polygon = new Graphics();
+    polygon.beginFill(0x3C3CCC);
+    polygon.drawPolygon([100, 500, 300, 100, 500, 500, 0, 200, 600, 200, 100, 500]);
+    polygon.endFill();
+    app.stage.addChild(polygon);
+
+    // 修改舞台背景颜色
+    // app.renderer.backgroundColor = 0xff0000; // 这里将背景颜色设置为红色  
+    // 绘制文字
+    let Text = PIXI.Text;
+    let TextStyle = PIXI.TextStyle;
+    let messageStyle = new TextStyle({
+        fontFamily: "Arial",
+        fontSize: 36,
+        fill: "white",
+        stroke: '#ff3300',
+        strokeThickness: 4,
+        dropShadow: true,
+        dropShadowColor: "#000000",
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+    })
+    let message = new Text("HELLO WORLD!!!", messageStyle);
+    message.position.set(200, 200)
+    // message.width=100
+    app.stage.addChild(message)
+
+</script>
+
+</html>

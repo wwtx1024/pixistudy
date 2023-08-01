@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script>
+    // 定义别名
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        TextureCache=PIXI.TextureCache,
+        Rectangle=PIXI.Rectangle;
+    let app=new Application();
+    document.body.appendChild(app.view)
+    loader.add("/img/09.png").load(setup);
+    function setup(){
+        let texture=TextureCache["/img/09.png"];
+        let rectangle = new Rectangle(96, 64, 32, 32);
+        texture.frame=rectangle;
+        let rocket=new Sprite(texture);
+        rocket.position.set(32,32)
+        app.stage.addChild(rocket);
+        // app.renderer.render(app.stage)
+    }
+</script>
+
+</html>
