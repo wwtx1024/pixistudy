@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+<script src="../pixi.min.js"></script>
+<script src="../pixi-filters.js"></script>
+<script>
+
+    console.log(PIXI)
+    // console.log(PIXI.filters)
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        TextureCache = PIXI.TextureCache,
+        Rectangle = PIXI.Rectangle,
+        Texture = PIXI.Texture,
+        Container = PIXI.Container;
+    let app = new Application({
+        width: 760,
+        height: 760,
+    })
+    document.body.appendChild(app.view);
+    // 创建分组
+    const container = new Container();
+    app.stage.addChild(container)
+    // 创建精灵
+    const texture = Texture.from("/img/19.png")
+    const sprite = new Sprite(texture);
+    container.addChild(sprite)
+
+    // 创建置换滤镜
+    const displacementSprite = Sprite.from("/img/displacement.jpg");
+    displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+    const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
+    container.addChild(displacementSprite);
+    // 置换滤镜添加到组
+    // container.filters = [displacementFilter];
+    // 创建震波滤镜
+    const shockwaveFilter = new PIXI.filters.ShockwaveFilter(
+        [380, 380],
+        {
+            radius: 80, //半径
+            waveLength: 40, //波长
+            amplitude: 40, //振幅
+            speed: 200,
+        },
+        0
+    )
+    setInterval(()=>{
+        shockwaveFilter.time += 0.01;
+    },10)
+    console.log(shockwaveFilter.time)
+    container.filters = [shockwaveFilter]
+    // 定时
+    app.ticker.add((delta) => {
+        displacementSprite.x += 3;
+        displacementSprite.y += 3;
+        // createWave(shockwaveFilter,1)
+    });
+    function createWave(waveFilter, resetTime) {
+        waveFilter.time += 0.01;
+        if (waveFilter.time > resetTime) {
+            waveFilter.time = 0;
+            // waveFilter.center = [
+            //   Math.random() * app.screen.width,
+            //   Math.random() * app.screen.height,
+            // ];
+        }
+    }
+
+    app.view.addEventListener("click", (e) => {
+        console.log(e.clientX, e.clientY);
+      
+        shockwaveFilter.center = [e.clientX, e.clientY];
+        shockwaveFilter.time = 0;
+    
+
+    });
+</script>
+
+</html>
